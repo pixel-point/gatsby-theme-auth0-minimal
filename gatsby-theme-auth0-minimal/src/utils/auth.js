@@ -36,6 +36,8 @@ const doIfAuthenticated = (authResult, cb, elseCb = () => {}) => {
   }
 };
 
+// changes callback in closure
+// setSessionStateCb(cb: Function) -> void
 export const setSessionStateCb = cb => (sessionStateCb = cb);
 
 // instantiating Auth0 module
@@ -100,6 +102,9 @@ export const handleAuthentication = () =>
   new Promise((resolve, reject) => {
     authInstance &&
       authInstance.parseHash((err, authResult) => {
+        if (err) {
+          return reject(err);
+        }
         doIfAuthenticated(authResult, () => {
           setSession()(err, authResult);
           const postLoginUrl = localStorage.getItem('postLoginUrl');
@@ -109,9 +114,6 @@ export const handleAuthentication = () =>
           }
           return resolve(authResult);
         });
-        if (err) {
-          return reject(err);
-        }
         return resolve();
       });
   });
@@ -124,15 +126,16 @@ export const checkSession = (cb = () => {}) => {
   return new Promise(resolve => {
     authInstance &&
       authInstance.checkSession({}, (err, authResult) => {
-        doIfAuthenticated(authResult, () => {
-          setSession(authResult);
-          return resolve(authResult);
-        });
         if (err && err.error === 'login_required') {
           // User has been logged out from Auth0 server.
           // Remove local session.
           localLogout();
+          return resolve();
         }
+        doIfAuthenticated(authResult, () => {
+          setSession(authResult);
+          return resolve(authResult);
+        });
         return resolve();
       });
   });
