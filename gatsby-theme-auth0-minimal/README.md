@@ -1,5 +1,4 @@
 <div align="center">
-  <img width="320" src="https://raw.githubusercontent.com/epilande/gatsby-theme-auth0/master/demos/gatsby-theme-shared-ui/src/GatsbyAuth0.svg?sanitize=true">
   <h1>gatsby-theme-auth0 🔐</h1>
 </div>
 
@@ -7,14 +6,14 @@
   <strong>A Gatsby theme for painless adding Auth0 to your application.</strong>
 </p>
 
-[![GitHub](https://img.shields.io/github/license/pixel-point/gatsby-theme-auth0-minimal?style=flat-square)](https://github.com/epilande/gatsby-theme-auth0-minimal/blob/master/LICENSE)
+[![GitHub](https://img.shields.io/github/license/pixel-point/gatsby-theme-auth0-minimal?style=flat-square)](https://github.com/pixel-point/gatsby-theme-auth0-minimal/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/v/gatsby-theme-auth0-minimal?style=flat-square)](https://www.npmjs.com/package/gatsby-theme-auth0-minimal)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d2098311-5d8c-4e06-b253-0b639cdc8562/deploy-status)](https://app.netlify.com/sites/gatsby-theme-auth0-minimal/deploys)
 
 ## What's in the box?
 
 - 💯 Easy to set up authentication.
-- 🤙 [`/auth/callback`](https://github.com/epilande/gatsby-theme-auth0/blob/master/gatsby-theme-auth0/src/pages/auth/callback.tsx) page automatically set up. Configurable via [`callbackPath`](#theme-options)
+- 🤙 [`/auth/callback`](https://github.com/pixel-point/gatsby-theme-auth0-minimal/blob/master/gatsby-theme-auth0-minimal/src/pages/auth/callback.js) page automatically set up. Configurable via [`callbackPath`](#theme-options)
 - 🎨 Fully customizable & extendable.
 
 ## Installation
@@ -25,8 +24,6 @@ $ npm install --save gatsby-theme-auth0-minimal
 
 ## Usage
 
-Fill up the `.env` file like shown in `example/.env.example`
-
 Set up your login/logout buttons and you're good to go!
 
 ```jsx
@@ -34,7 +31,8 @@ import React from 'react';
 import { AuthService, useAuth } from 'gatsby-theme-auth0';
 
 export default () => {
-  const { isLoggedIn, profile } = useAuth();
+  // order does matter
+  const [isLoading, isLoggedIn, profile] = useAuth();
   return (
     <div>
       {profile && <p>Hello {profile.name}</p>}
@@ -69,7 +67,7 @@ To start shadowing, create a folder with the theme name `gatsby-theme-auth0` in 
 Now you're able to override any file in the theme. For example, if you want to override the `callback` component, create a file:
 
 ```sh
-src/gatsby-theme-auth0/components/callback.js
+src/gatsby-theme-auth0-minimal/components/callback.js
 ```
 
 ## Demos
@@ -80,7 +78,7 @@ src/gatsby-theme-auth0/components/callback.js
 
 ### Set up env variables
 
-Go to demo application directory, copy the `.env.example` -> `.env.development`. Fill in the required environment variables before starting up the client dev server.
+Go to demo application directory, copy the `/example/.env.example` -> `.env.development`. Fill in the required environment variables before starting up the client dev server.
 
 ### Available Scripts
 
@@ -96,6 +94,14 @@ This will build the demo app for production using `.env.production`.
 
 Outputs to the `demo/public` folder.
 
+#### `$ yarn serve`
+
+This will serve previously built demo app for production using `.env.production`.
+
+Outputs to the `example/public` folder.
+
 ## Credits
 
-TBD
+- [gatsby-theme-auth0](https://github.com/epilande/gatsby-theme-auth0) for overall structure
+- [gatsby-auth0](https://github.com/auth0-blog/gatsby-auth0) for some nice ideas
+- [gatsby-auth0-app](https://github.com/jlengstorf/gatsby-auth0-app) nice illustration how to do all that stuff with React hooks
