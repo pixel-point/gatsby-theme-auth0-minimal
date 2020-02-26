@@ -5,7 +5,7 @@ import { useAuth } from 'gatsby-theme-auth0-minimal';
 // const protectedRoutes = [`/account`, `/auth/callback`]
 
 const CheckLoading = ({ children }) => {
-  const [isLoading] = useAuth();
+  const { isLoading } = useAuth();
 
   return isLoading ? <p>Loading...</p> : <>{children}</>;
 };

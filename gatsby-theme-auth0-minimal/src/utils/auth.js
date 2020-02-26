@@ -28,7 +28,7 @@ let sessionStateCb = () => {};
 // helper functions
 const isBrowser = typeof window !== `undefined`;
 
-const doIfAuthenticated = (authResult, cb, elseCb = () => {}) => {
+const doIfAuthenticated = (authResult, cb = () => {}, elseCb = () => {}) => {
   if (authResult && authResult.accessToken && authResult.idToken) {
     cb();
   } else {
@@ -41,7 +41,7 @@ const doIfAuthenticated = (authResult, cb, elseCb = () => {}) => {
 export const setSessionStateCb = cb => (sessionStateCb = cb);
 
 // instantiating Auth0 module
-const authInstance = isBrowser ? new WebAuth(AUTH0_CONFIG) : {};
+const authInstance = new WebAuth(AUTH0_CONFIG);
 
 const setSession = (cb = () => {}) => (err, authResult) => {
   if (err) {

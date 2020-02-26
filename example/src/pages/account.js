@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Router, navigate } from '@reach/router';
+import React from 'react';
+import { Router } from '@reach/router';
 import { AuthService, useAuth } from 'gatsby-theme-auth0-minimal';
 import { Link } from 'gatsby';
 
@@ -9,7 +9,7 @@ const Settings = () => <p>Settings</p>;
 const Billing = () => <p>Billing</p>;
 
 const PrivateRoute = ({ component: Component, location, ...rest }) => {
-  const [isLoading, isLoggedIn, profile] = useAuth();
+  const { isLoggedIn } = useAuth();
   if (!isLoggedIn && location.pathname !== `/account/login`) {
     return (
       <div>
@@ -29,7 +29,7 @@ const PrivateRoute = ({ component: Component, location, ...rest }) => {
 };
 
 const Account = () => {
-  const [isLoading, isLoggedIn, profile] = useAuth();
+  const { isLoading, isLoggedIn, profile } = useAuth();
 
   return isLoading ? null : (
     <>

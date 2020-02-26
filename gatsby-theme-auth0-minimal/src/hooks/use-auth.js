@@ -36,7 +36,7 @@ const useAuth = (stateCallback = () => {}) => {
     };
   }, []);
 
-  return [isLoading, isLoggedIn, profile];
+  return { isLoading, isLoggedIn, profile };
 };
 
 export default useAuth;
