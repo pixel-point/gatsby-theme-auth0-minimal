@@ -9,29 +9,30 @@ const Settings = () => <p>Settings</p>;
 const Billing = () => <p>Billing</p>;
 
 const PrivateRoute = ({ component: Component, location, ...rest }) => {
-  const { isLoggedIn } = useAuth();
-  if (!isLoggedIn && location.pathname !== `/account/login`) {
-    return (
-      <div>
-        <p>You have to login to view this page</p>
-        <button
-          type="button"
-          onClick={e => {
-            AuthService.login();
-          }}
-        >
-          Login
-        </button>
-      </div>
-    );
-  }
-  return <Component {...rest} />;
+  const { isLoading, isLoggedIn } = useAuth();
+  const content = isLoggedIn ? (
+    <Component {...rest} />
+  ) : (
+    <div>
+      <p>You have to login to view this page</p>
+      <button
+        type="button"
+        onClick={e => {
+          AuthService.login();
+        }}
+      >
+        Login
+      </button>
+    </div>
+  );
+  return isLoading ? <p>Loading private route page...</p> : content;
 };
 
 const Account = () => {
   const { isLoading, isLoggedIn, profile } = useAuth();
-
-  return isLoading ? null : (
+  return isLoading ? (
+    <p>Loading account data...</p>
+  ) : (
     <>
       <nav>
         <Link to="/">Home</Link> <Link to="/account/">My Account</Link>{' '}

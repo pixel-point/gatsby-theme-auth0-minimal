@@ -49,7 +49,11 @@ const setSession = (cb = () => {}) => (err, authResult) => {
       case 'login_required':
         return login();
       default:
-        throw new Error(JSON.stringify(err));
+        // eslint-disable-next-line
+        console.log('set session error', JSON.stringify(err));
+        navigate('/');
+        cb();
+        return;
     }
   }
 
@@ -69,12 +73,14 @@ const setSession = (cb = () => {}) => (err, authResult) => {
 
 const localLogout = () => {
   if (!isBrowser) return;
+  console.log('logging out locally');
   // Remove tokens and user profile
   tokens.accessToken = undefined;
   tokens.idToken = undefined;
   user = undefined;
 
   localStorage.removeItem('isLoggedIn');
+  console.log('removed localstorage flag');
   sessionStateCb({
     isLoggedIn: isAuthenticated(),
     userProfile: getUserProfile(),
@@ -127,13 +133,14 @@ export const checkSession = (cb = () => {}) => {
     authInstance &&
       authInstance.checkSession({}, (err, authResult) => {
         if (err && err.error === 'login_required') {
+          console.log('check session error', err);
           // User has been logged out from Auth0 server.
           // Remove local session.
           localLogout();
           return resolve();
         }
         doIfAuthenticated(authResult, () => {
-          setSession(authResult);
+          setSession()(err, authResult);
           return resolve(authResult);
         });
         return resolve();
