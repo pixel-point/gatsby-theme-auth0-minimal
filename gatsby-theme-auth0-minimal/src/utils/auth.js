@@ -41,7 +41,7 @@ const doIfAuthenticated = (authResult, cb = () => {}, elseCb = () => {}) => {
 export const setSessionStateCb = cb => (sessionStateCb = cb);
 
 // instantiating Auth0 module
-const authInstance = new WebAuth(AUTH0_CONFIG);
+const authInstance = isBrowser ? new WebAuth(AUTH0_CONFIG) : {};
 
 const setSession = (cb = () => {}) => (err, authResult) => {
   if (err) {
