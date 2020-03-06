@@ -7,7 +7,7 @@ const AUTH0_CONFIG = {
   clientID: process.env.GATSBY_AUTH0_CLIENTID,
   redirectUri: process.env.GATSBY_AUTH0_CALLBACK,
   // optional
-  responseType: process.env.GATSBY_AUTH0_RESPONSE_TYPE || 'token id_token',
+  responseType: 'token id_token', // this value is not tweakable, @TODO: put link to doc with explanation
   scope: process.env.GATSBY_AUTH0_SCOPE || 'openid profile email',
   audience: process.env.GATSBY_AUTH0_AUDIENCE || false,
 };
