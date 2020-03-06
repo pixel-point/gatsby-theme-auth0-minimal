@@ -1,6 +1,6 @@
 {
   "name": "gatsby-theme-auth0-minimal",
-  "version": "0.0.2",
+  "version": "0.1.2",
   "description": "A Gatsby theme for Auth0",
   "main": "index.js",
   "scripts": {},

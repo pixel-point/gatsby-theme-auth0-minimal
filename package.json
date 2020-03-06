@@ -9,7 +9,8 @@
     "build": "yarn workspace example build",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "lint": "eslint gatsby-theme-auth0-minimal example",
-    "serve": "yarn workspace example serve"
+    "serve": "yarn workspace example serve",
+    "clean": "yarn workspace example clean"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
