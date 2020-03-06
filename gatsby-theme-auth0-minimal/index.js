@@ -1,4 +1,4 @@
-import * as AuthService from './src/utils/auth';
 import useAuth from './src/hooks/use-auth';
+import { AuthProvider } from './src/components/hoc/auth-context-provider';
 
-export { AuthService, useAuth };
+export { useAuth, AuthProvider };

@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import { handleAuthentication } from '../../utils/auth';
-import Callback from '../../components/callback';
+import Callback from '../../components/common/callback';
+import useAuth from '../../hooks/use-auth';
 
-const CallbackPage = props => {
-  const { location } = props;
-
+const CallbackPage = ({ location }) => {
+  const { handleAuthentication } = useAuth();
   useEffect(() => {
     if (/access_token|id_token|error/.test(location.hash)) {
       handleAuthentication();
