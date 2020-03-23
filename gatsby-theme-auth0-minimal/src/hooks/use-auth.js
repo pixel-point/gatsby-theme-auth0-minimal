@@ -89,9 +89,11 @@ const useAuth = () => {
   }, [auth0]);
 
   const handleAuthentication = useCallback(() => {
+    updateAuthState({ ...authState, isLoading: true });
     auth0.parseHash((err, authResult) => {
       if (err) {
         navigate('/');
+        updateAuthState({ ...authState, isLoading: false });
       } else if (authResult && authResult.accessToken && authResult.idToken) {
         setSession(authResult);
         const postLoginUrl = localStorage.getItem('postLoginUrl');
