@@ -3,13 +3,15 @@ import { Router } from '@reach/router';
 import { useAuth } from 'gatsby-theme-auth0-minimal';
 import { Link } from 'gatsby';
 
-const Home = () => <p>Home</p>;
 const MyAccount = () => <p>My Very Private Info</p>;
 const Settings = () => <p>My personal Settings</p>;
 const Billing = () => <p> My Billing info</p>;
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return isAuthenticated ? (
     <Component {...rest} />
   ) : (
@@ -71,9 +73,8 @@ const Account = () => {
           </a>
         )}
       </nav>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      {user && <pre>{JSON.stringify(user, null, 2)}</pre>}
       <Router>
-        <Home path="/" />
         <PrivateRoute path="/account/" component={MyAccount} />
         <PrivateRoute path="/account/settings" component={Settings} />
         <PrivateRoute path="/account/billing" component={Billing} />

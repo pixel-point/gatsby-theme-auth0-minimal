@@ -141,6 +141,7 @@ export default () => {
       idToken, // contains user payload
       expiresAt, // how long token are going to live
       unschedule, // auxillary field to manually unschedule token renewing
+      isLoading, // flag that reflects auth request state, helpes handle the UI
     },
     handleAuthentication, // would be useful implementing you own callback component
   } = useAuth();
@@ -151,6 +152,9 @@ export default () => {
       checkSession();
     }
   }, []);
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   return (
     <div>
       {user && <p>Hello {user.name}</p>}
@@ -164,7 +168,31 @@ export default () => {
 };
 ```
 
-[Source code for this piece](../example/src/pages/account.js)
+[Source code for this piece](/example/src/pages/account.js)
+
+`useAuth()` return value under the microscope:
+
+#### Methods
+
+| name                 | args | description                                                                                                                                                                                                                                                                                |
+| -------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| login                | -    | Wrapper for `auth0` [native `login` function](https://auth0.github.io/auth0.js/global.html#login). Logs the user in with username and password using the implicit flow. Sets `postLoginUrl` value into `localStorage` where user is being redirected after he successful logs in.          |
+| logout               | -    | Wrapper for `auth0` [native `logout` function](https://auth0.github.io/auth0.js/global.html#logout). Redirects to the auth0 logout endpoint. Refreshes `authState` with default values. Removes any `isLoggedIn` flag from `localStorage`.                                                 |
+| checkSession         | -    | Wrapper for `auth0` [native `checkSession` function](https://auth0.github.io/auth0.js/global.html#checkSession). Renews an existing session on Auth0's servers using `response_mode=web_message`. Changes `isLoading` during execution (`true` -> `false`). Exploits `postLoginUrl` value. |
+| handleAuthentication | -    | Wrapper for `auth0` [native `parseHash` function](https://auth0.github.io/auth0.js/global.html#parseHash). Parse the url hash and extract the Auth response from a Auth flow. Changes `isLoading` during execution (`true` -> `false`). Exploits `postLoginUrl` value.                     |
+
+#### Properties
+
+| name            | type             | description                                                                                             |
+| --------------- | ---------------- | ------------------------------------------------------------------------------------------------------- |
+| isLoading       | Boolean          | Flag that reflects current state of possible auth0 requests                                             |
+| isAuthenticated | Boolean          | Flag that reflects current authentication state, binded to `authState.expiresAt` property.              |
+| authState       | Object           | Object representing auth data. Contains:                                                                |
+| - accessToken   | String \| null   | String with auth0 [access token](https://auth0.com/docs/tokens/concepts/access-tokens)                  |
+| - idToken       | String \| null   | String with auth0 [id token](https://auth0.com/docs/tokens/concepts/id-tokens#introduction)             |
+| - userProfile   | Object \| null   | Object with [user data](https://auth0.com/docs/api/authentication#get-user-info)                        |
+| - expiresAt     | Date \| 0        | Lifespan amount of a token                                                                              |
+| - unschedule    | Function \| null | Function that serves as a flag that reflects state of token auto renewal. Clears schedule on execution. |
 
 ### Check out full example
 

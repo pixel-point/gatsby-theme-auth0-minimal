@@ -30,6 +30,8 @@ const useAuthState = () => {
     // reference to clearTimeout function
     // of scheduled token renewal functionality
     unschedule: null,
+    // storing flag globaly to make sure state persists
+    isLoading: localStorage.getItem('isLoggedIn') || false,
   });
   return {
     auth0: generateAuth(),

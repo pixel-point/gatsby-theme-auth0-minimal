@@ -11,7 +11,7 @@ const useIsAuthenticated = expiresAt => {
 const useAuth = () => {
   const { auth0, authState, updateAuthState } = useAuthContext();
   const isAuthenticated = useIsAuthenticated(authState.expiresAt);
-
+  const isLoading = authState.isLoading;
   const login = useCallback(() => {
     // Save postLoginUrl so we can redirect user back to where they left off after login screen
     localStorage.setItem('postLoginUrl', window.location.pathname);
@@ -47,6 +47,7 @@ const useAuth = () => {
         idToken: authResult.idToken,
         expiresAt: authResult.expiresIn * 1000 + new Date().getTime(),
         user: authResult.idTokenPayload,
+        isLoading: false,
       });
       scheduleRenewal(authResult.expiresIn * 1000);
     },
@@ -54,6 +55,7 @@ const useAuth = () => {
   );
 
   const checkSession = useCallback(() => {
+    updateAuthState({ ...authState, isLoading: true });
     auth0.checkSession({}, (err, authResult) => {
       if (err && err.error === 'login_required') {
         // User has been logged out from Auth0 server.
@@ -73,6 +75,7 @@ const useAuth = () => {
       idToken: null,
       user: null,
       expiresAt: 0,
+      isLoading: false,
     });
 
     localStorage.removeItem('isLoggedIn');
@@ -86,9 +89,11 @@ const useAuth = () => {
   }, [auth0]);
 
   const handleAuthentication = useCallback(() => {
+    updateAuthState({ ...authState, isLoading: true });
     auth0.parseHash((err, authResult) => {
       if (err) {
         navigate('/');
+        updateAuthState({ ...authState, isLoading: false });
       } else if (authResult && authResult.accessToken && authResult.idToken) {
         setSession(authResult);
         const postLoginUrl = localStorage.getItem('postLoginUrl');
@@ -107,6 +112,7 @@ const useAuth = () => {
     checkSession,
     isAuthenticated,
     authState,
+    isLoading,
   };
 };
 
