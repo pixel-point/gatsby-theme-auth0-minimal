@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { navigate } from '@reach/router';
 import { useAuthContext } from '../components/hoc/auth-context-provider';
 
@@ -11,7 +11,6 @@ const useIsAuthenticated = expiresAt => {
 const useAuth = () => {
   const { auth0, authState, updateAuthState } = useAuthContext();
   const isAuthenticated = useIsAuthenticated(authState.expiresAt);
-
   const login = useCallback(() => {
     // Save postLoginUrl so we can redirect user back to where they left off after login screen
     localStorage.setItem('postLoginUrl', window.location.pathname);
@@ -47,6 +46,7 @@ const useAuth = () => {
         idToken: authResult.idToken,
         expiresAt: authResult.expiresIn * 1000 + new Date().getTime(),
         user: authResult.idTokenPayload,
+        isLoading: false,
       });
       scheduleRenewal(authResult.expiresIn * 1000);
     },
@@ -54,6 +54,7 @@ const useAuth = () => {
   );
 
   const checkSession = useCallback(() => {
+    updateAuthState({ ...authState, isLoading: true });
     auth0.checkSession({}, (err, authResult) => {
       if (err && err.error === 'login_required') {
         // User has been logged out from Auth0 server.
@@ -73,6 +74,7 @@ const useAuth = () => {
       idToken: null,
       user: null,
       expiresAt: 0,
+      isLoading: false,
     });
 
     localStorage.removeItem('isLoggedIn');
