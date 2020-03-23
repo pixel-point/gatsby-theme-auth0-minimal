@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { navigate } from '@reach/router';
 import { useAuthContext } from '../components/hoc/auth-context-provider';
 
@@ -11,6 +11,7 @@ const useIsAuthenticated = expiresAt => {
 const useAuth = () => {
   const { auth0, authState, updateAuthState } = useAuthContext();
   const isAuthenticated = useIsAuthenticated(authState.expiresAt);
+  const isLoading = authState.isLoading;
   const login = useCallback(() => {
     // Save postLoginUrl so we can redirect user back to where they left off after login screen
     localStorage.setItem('postLoginUrl', window.location.pathname);
@@ -109,6 +110,7 @@ const useAuth = () => {
     checkSession,
     isAuthenticated,
     authState,
+    isLoading,
   };
 };
 

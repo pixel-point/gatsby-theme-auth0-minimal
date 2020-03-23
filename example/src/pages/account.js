@@ -8,11 +8,7 @@ const Settings = () => <p>My personal Settings</p>;
 const Billing = () => <p> My Billing info</p>;
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const {
-    login,
-    isAuthenticated,
-    authState: { isLoading },
-  } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAuth();
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -77,7 +73,7 @@ const Account = () => {
           </a>
         )}
       </nav>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      {user && <pre>{JSON.stringify(user, null, 2)}</pre>}
       <Router>
         <PrivateRoute path="/account/" component={MyAccount} />
         <PrivateRoute path="/account/settings" component={Settings} />
