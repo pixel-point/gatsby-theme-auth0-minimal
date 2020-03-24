@@ -229,6 +229,30 @@ There is [a number of authentication flow exist](https://auth0.com/docs/api-auth
 6.  Your SPA can use the Access Token to call an API.
 7.  The API responds with requested data.
 
+### Access Token Lifespan
+
+#### Custom APIs
+
+By default, an [Access Token for a custom API is valid for 86400 seconds (24 hours)](https://auth0.com/docs/tokens/concepts/access-tokens#access-token-lifetime) .
+
+To learn how to change the Access Token expiration time, see [Update Access Token Lifetime](https://auth0.com/docs/dashboard/guides/apis/update-token-lifetime).
+
+#### /userinfo endpoint
+
+Access Tokens issued strictly for the purpose of accessing the OpenID Connect (OIDC) [`/userinfo` endpoint](https://auth0.com/docs/api/authentication#get-user-info) have a default lifetime and can't be changed. The length of lifetime in implicit flow is equal to 7200 seconds (2 hours).
+
+### Scheduled renewal
+
+To leave an active user out of pointless interaction when his token is expired but he IS actually authorized, [silent authentication concept](https://auth0.com/docs/api-auth/tutorials/silent-authentication) is being used here. Here is how it works:
+
+- Schedule renewal initiation is happening during `setSession` method by calling `scheduleRenewal` function. This will occur after every authentication flow, either when the user explicitly logs in, or when the silent authentication happens.
+
+- `scheduleRenewal` sets up a time at which authentication should be silently renewed, which is equal to 30 seconds before the actual token expires. Also updates `AuthProvider` state with a reference to `unschedule` function which allows to remove last scheduled renewal on call.
+
+- If the renewal is successful, use the existing `setSession` method to set the new tokens in local storage AND schedule a new token renewal.
+
+[Example in Auth0 docs](https://auth0.com/docs/architecture-scenarios/spa-api/spa-implementation-angular2#6-renew-the-access-token)
+
 ## Contribution
 
 Contributions of any kind are welcome! If you know, how to make it better, add a new exciting functionality or simply fix a typ0 in this README file - go for it! Your previous coding experience doesn't matter as long as you understand what are you trying to do :smile:
